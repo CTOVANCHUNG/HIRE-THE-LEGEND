@@ -21,13 +21,12 @@
             --gold: #ffd700;          
             --verified: #4dabf7;
             --tag: #808080;           
-            --guide-line: #505050;    
+            --guide-line: #404040;    
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            /* Font chữ "Cổ" (Courier New) */
             font-family: "Courier New", Courier, monospace;
             background-color: var(--bg-dark);
             color: var(--text-main);
@@ -37,6 +36,27 @@
             line-height: 1.5;
             overflow-x: hidden; 
             font-weight: bold; 
+        }
+
+        /* --- HIỆU ỨNG MƯA KÝ TỰ (CHAR RAIN) --- */
+        .char-drop {
+            display: inline-block;
+            opacity: 0;
+            white-space: pre; 
+            /* Chữ rơi từ trên cao xuống */
+            animation: rainDrop 0.2s linear forwards; 
+        }
+
+        @keyframes rainDrop {
+            0% { 
+                opacity: 0;
+                transform: translateY(-20px); /* Rơi từ trên xuống */
+                color: var(--gold); /* Lóe sáng khi rơi */
+            }
+            100% { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* --- SIDEBAR --- */
@@ -53,29 +73,29 @@
             height: auto;
         }
 
-        /* --- AVATAR WRAPPER --- */
-        .img-tag {
-            color: var(--tag);
-            font-size: 13px;
-            display: block;
-        }
+        /* --- AVATAR --- */
+        .img-tag { color: var(--tag); font-size: 13px; display: block; }
 
         .avatar-scope {
             border-left: 1px dashed var(--guide-line); 
-            margin-left: 5px;
-            padding-left: 20px;
-            margin-top: 2px;
-            margin-bottom: 2px;
+            margin-left: 5px; padding-left: 20px;
+            margin-top: 2px; margin-bottom: 2px;
         }
 
         .profile-img-container {
-            width: 150px;
-            height: 150px;
-            border-radius: 10px;
-            overflow: hidden;
+            width: 150px; height: 150px;
+            border-radius: 10px; overflow: hidden;
             border: 3px solid var(--gold);
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            opacity: 0; /* Ẩn mặc định để tạo hiệu ứng xuất hiện */
+            /* Animation dự phòng trong CSS để đảm bảo hiện nếu JS chậm */
+            animation: fadeInAvatar 1s ease-out 0.5s forwards;
         }
+        
+        @keyframes fadeInAvatar {
+            to { opacity: 1; }
+        }
+
         .profile-img { width: 100%; height: 100%; object-fit: cover; }
 
         /* --- MAIN CONTENT --- */
@@ -85,17 +105,60 @@
             height: auto;
             overflow: visible;
             position: relative; 
+            transition: filter 0.5s ease;
         }
+
+        /* KHÓA NỘI DUNG */
+        .content-locked {
+            filter: blur(10px) grayscale(100%); /* Làm mờ và xám xịt */
+            pointer-events: none;    
+            user-select: none;
+        }
+
+        /* --- COUNTDOWN WARNING (CẢNH BÁO 3s) --- */
+        #security-alert {
+            position: fixed;
+            top: 20px; right: 20px;
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border: 2px solid red;
+            border-radius: 5px;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            z-index: 6000;
+            display: none;
+            box-shadow: 0 0 20px red;
+            animation: blinkRed 0.5s infinite;
+        }
+        @keyframes blinkRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- LOCK SCREEN --- */
+        #lock-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 5000;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            color: #ff4d4d; text-align: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        #lock-screen.active { opacity: 1; pointer-events: all; }
+        
+        .lock-icon { font-size: 80px; margin-bottom: 20px; color: #ff4d4d; animation: shake 0.5s infinite; }
+        .lock-title { font-size: 35px; margin-bottom: 10px; letter-spacing: 5px; text-transform: uppercase; border-bottom: 3px solid #ff4d4d; padding-bottom: 10px; }
+        .lock-msg { color: #fff; font-size: 18px; margin-bottom: 40px; font-family: monospace; }
+        .arrow-guide { color: var(--gold); font-size: 50px; animation: bounce 1s infinite; position: absolute; bottom: 90px; right: 50px; }
+        
+        @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
         /* --- CODE STYLING --- */
         .code-block { margin-bottom: 25px; position: relative; }
-        
         .scope {
             border-left: 1px dashed var(--guide-line);
-            margin-left: 4px;  
-            padding-left: 25px; 
-            display: flex;
-            flex-direction: column;
+            margin-left: 4px; padding-left: 25px; 
+            display: flex; flex-direction: column;
         }
 
         .kw { color: var(--keyword); }
@@ -104,41 +167,28 @@
         .num { color: var(--number); }
         .cmt { color: var(--comment); font-style: italic; }
         .mtd { color: var(--method); }
-        
         .verified-icon { color: var(--verified); margin-left: 8px; }
-        .vip-text { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
-
+        .vip-text { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
         a { color: var(--string); text-decoration: underline; cursor: pointer; }
 
-        /* --- NÚT HIRE THE LEGEND (CẬP NHẬT: TẠO PDF) --- */
+        /* --- NÚT HIRE THE LEGEND --- */
         .hire-btn {
-            position: fixed; 
-            bottom: 30px;
-            right: 40px;
-            background-color: var(--gold);
-            color: #000 !important; 
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none !important;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 9999; 
-            transition: transform 0.2s;
-            border: 2px solid #fff;
-            font-family: "Courier New", Courier, monospace;
-            cursor: pointer;
+            position: fixed; bottom: 30px; right: 40px;
+            background: linear-gradient(45deg, #FFD700, #ffb900, #FFD700);
+            background-size: 200% 200%;
+            color: #000 !important; padding: 15px 30px;
+            border-radius: 5px; text-decoration: none !important;
+            font-weight: 900; display: flex; align-items: center; gap: 10px;
+            z-index: 9999; transition: all 0.3s;
+            border: 2px solid #fff; font-family: "Courier New", Courier, monospace;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            opacity: 0; /* JS sẽ hiện */
+            animation: pulse-btn 2s infinite;
         }
-        
-        .hire-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
-            background-color: #ffed4a;
-        }
+        .hire-btn:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); background-color: #fff; }
+        @keyframes pulse-btn { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
 
-        /* Ẩn thanh cuộn */
         ::-webkit-scrollbar { width: 8px; background-color: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background-color: #444; border-radius: 4px; }
 
@@ -147,43 +197,52 @@
             .sidebar { width: 100%; min-height: auto; border-right: none; border-bottom: 1px solid #333;}
             .main-content { padding: 20px; }
             .hire-btn { bottom: 20px; right: 20px; padding: 10px 20px; font-size: 12px; }
+            .arrow-guide { bottom: 60px; right: 30px; font-size: 30px; }
         }
 
-        /* --- CẤU HÌNH IN ẤN (TẠO PDF) --- */
         @media print {
-            /* Ẩn nút download khi in ra giấy/PDF */
-            .hire-btn { display: none !important; }
-            
-            /* Giữ màu nền đen khi in (nếu trình duyệt hỗ trợ) */
-            body { 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-                background-color: #1e1e1e !important;
-                color: #d4d4d4 !important;
-            }
-            
-            /* Tùy chỉnh trang in */
-            @page { 
-                margin: 0; 
-                size: auto; 
-                background-color: #1e1e1e;
-            }
-            
+            .hire-btn, #lock-screen, #security-alert { display: none !important; }
+            .main-content, .sidebar { opacity: 1 !important; filter: none !important; }
+            body { background-color: #1e1e1e !important; color: #d4d4d4 !important; }
             .sidebar { border-right: 1px solid #555; }
+            @page { margin: 0; size: auto; }
+            .char-drop { opacity: 1 !important; animation: none !important; }
+            .profile-img-container { opacity: 1 !important; } /* Đảm bảo in ra có ảnh */ 
         }
     </style>
 </head>
 <body>
 
+    <!-- CẢNH BÁO BREACH -->
+    <div id="security-alert">
+        ⚠️ SECURITY BREACH DETECTED!<br>
+        SYSTEM LOCKING IN <span id="countdown">3</span>...
+    </div>
+
+    <!-- MÀN HÌNH KHÓA -->
+    <div id="lock-screen">
+        <i class="fas fa-lock lock-icon"></i>
+        <div class="lock-title">SYSTEM LOCKED</div>
+        <div class="lock-msg">
+            Unauthorized Access Detected.<br>
+            Recruit the Candidate to Decrypt Data.
+        </div>
+        <div style="font-size: 24px; font-weight: bold; color: var(--gold);">
+            CLICK BELOW TO UNLOCK 👇
+        </div>
+        <div class="arrow-guide">
+            <i class="fas fa-arrow-down"></i>
+        </div>
+    </div>
+
     <!-- CỘT TRÁI (SIDEBAR) -->
-    <div class="sidebar">
-        <!-- AVATAR SECTION -->
+    <div class="sidebar" id="sidebar">
         <div class="code-block" style="margin-bottom: 10px;">
             <span class="img-tag">&lt;img&gt;</span>
             <div class="avatar-scope">
-                <div class="profile-img-container">
-                    <!-- Ảnh đại diện Venom -->
-                    <img src="avatar.jpg" alt="Profile" class="profile-img">
+                <div class="profile-img-container" id="avatar-container">
+                    <!-- QUAN TRỌNG: Đảm bảo file ảnh tên là avatar.jpg -->
+                    <img src="avatar.jpg" alt="Profile" class="profile-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/000000/FFFFFF/?text=Avatar+Missing';">
                 </div>
             </div>
             <span class="img-tag">&lt;\img&gt;</span>
@@ -195,7 +254,7 @@
             {
             <div class="scope">
                 <div><span class="indent-0 vip-text">Tech_Hall_of_Fame,</span></div>
-                <div><span class="indent-0 vip-text">Unicorn_Founder_Club,</span></div>
+                <div><span class="indent-0 vip-text">Unicorn_Founder,</span></div>
                 <div><span class="indent-0 vip-text">Top_1_Percent_IQ,</span></div>
                 <div><span class="indent-0 ty">Knighted_by_Queen (Sir)</span></div>
             </div>
@@ -208,7 +267,7 @@
             <div class="scope">
                 <div><span class="ty">Google_Data_Center_L5,</span></div>
                 <div><span class="ty">SpaceX_Launch_Control,</span></div>
-                <div><span class="ty">Pentagon_Cyber_Consultant</span></div>
+                <div><span class="ty">Pentagon_Consultant</span></div>
             </div>
             }
         </div>
@@ -217,10 +276,10 @@
             <span class="kw">public enum</span> <span class="ty">DOMAIN_MASTERY</span><br>
             {
             <div class="scope">
-                <div><span class="ty">Interplanetary_Internet,</span></div>
-                <div><span class="ty">Sentient_AI_Development,</span></div>
-                <div><span class="ty">Blockchain_Architecture,</span></div>
-                <div><span class="ty">Reverse_Engineering_UFO</span></div>
+                <div><span class="ty">Interplanetary_Web,</span></div>
+                <div><span class="ty">Sentient_AI_Core,</span></div>
+                <div><span class="ty">Blockchain_Architect,</span></div>
+                <div><span class="ty">Reverse_Engineering</span></div>
             </div>
             }
         </div>
@@ -248,10 +307,9 @@
         </div>
     </div>
 
-    <!-- CỘT PHẢI (NỘI DUNG CHÍNH) -->
-    <div class="main-content">
+    <!-- CỘT PHẢI (MAIN CONTENT) -->
+    <div class="main-content" id="main-content">
         
-        <!-- Header Comment -->
         <div class="code-block cmt">
             /// &lt;summary&gt;<br>
             /// ⚠️ WARNING: OVERQUALIFIED FOR 99.9% OF JOBS.<br>
@@ -284,7 +342,6 @@
             <span class="kw">public static class</span> <span class="ty">INDUSTRY_ENDORSEMENTS</span><br>
             {
             <div class="scope">
-                
                 <div>
                     <span class="kw">public string</span> Elon_Musk = <br>
                     <span class="str" style="padding-left: 20px;">"The only person on Earth I'd trust to run Twitter's backend blindfolded."</span>;
@@ -348,7 +405,7 @@
                         <div><span class="kw">var</span> _Impact = <span class="vip-text">"Saved the company $2.5 Billion annually"</span>;</div>
                         <br>
                         <div class="cmt">/* Redesigned the entire Google Search indexing algorithm.</div>
-                        <div class="cmt">   Directly advised Sundar Pichai on the future of AI (Bard/Gemini). */</div>
+                        <div class="cmt">   Directly advised Sundar Pichai on the future of AI. */</div>
                     </div>
                     }
                 </div>
@@ -360,21 +417,8 @@
                     <div class="scope">
                         <div><span class="kw">var</span> _Role = <span class="str">"Lead Architect of GPT-4"</span>;</div>
                         <br>
-                        <div class="cmt">/* Wrote the core self-attention mechanisms that made ChatGPT possible.</div>
-                        <div class="cmt">   Solved the alignment problem ensuring AI safety for humanity. */</div>
-                    </div>
-                    }
-                </div>
-                <br>
-                <!-- JOB 3 -->
-                <div>
-                    <span class="kw">public void</span> <span class="mtd">Confidential_Government_Project</span>()<br>
-                    {
-                    <div class="scope">
-                        <div><span class="kw">var</span> _Clearance = <span class="str">"Top Secret / SCI"</span>;</div>
-                        <br>
-                        <div class="cmt">/* Prevented a global cybersecurity meltdown during the 2022 crisis.</div>
-                        <div class="cmt">   Single-handedly patched the Quantum-Decryption vulnerability. */</div>
+                        <div class="cmt">/* Wrote the core self-attention mechanisms.</div>
+                        <div class="cmt">   Solved the alignment problem ensuring AI safety. */</div>
                     </div>
                     }
                 </div>
@@ -384,10 +428,109 @@
 
     </div>
 
-    <!-- NÚT TẠO PDF (LUÔN BÁM GÓC DƯỚI) -->
-    <a href="#" class="hire-btn" onclick="window.print(); return false;">
-        <i class="fas fa-file-pdf"></i> TẢI CV DẠNG PDF
+    <!-- BUTTON -->
+    <a href="#" class="hire-btn" id="hireBtn" onclick="unlockAndDownload()">
+        <i class="fas fa-crown"></i> HIRE THE LEGEND
     </a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // HIỆU ỨNG MƯA KÝ TỰ (TRÁI -> PHẢI, TRÊN -> DƯỚI)
+            const contentBlocks = document.querySelectorAll('.code-block, .img-tag, .avatar-scope');
+            let globalDelay = 0;
+            const delayIncrement = 0.005; // Tốc độ mưa
+
+            function processTextNodes(element) {
+                const childNodes = Array.from(element.childNodes);
+                childNodes.forEach(node => {
+                    if (node.nodeType === 3) { 
+                        const text = node.textContent;
+                        if (!text.trim()) return;
+                        const spanWrapper = document.createElement('span');
+                        for (let char of text) {
+                            const charSpan = document.createElement('span');
+                            charSpan.textContent = char;
+                            charSpan.classList.add('char-drop');
+                            charSpan.style.animationDelay = `${globalDelay}s`;
+                            spanWrapper.appendChild(charSpan);
+                            globalDelay += delayIncrement;
+                        }
+                        node.replaceWith(spanWrapper);
+                    } else if (node.nodeType === 1) { 
+                        processTextNodes(node);
+                    }
+                });
+            }
+
+            const allContainers = document.querySelectorAll('.sidebar, .main-content');
+            allContainers.forEach(container => processTextNodes(container));
+
+            // FIX: Hiện Avatar sớm hơn, không chờ chữ chạy hết
+            setTimeout(() => {
+                const ava = document.getElementById('avatar-container');
+                if (ava) {
+                    ava.style.opacity = '1';
+                    ava.style.animation = 'rainDrop 0.5s forwards';
+                }
+            }, 800); // 0.8s là hiện avatar luôn
+
+            // Nút hiện sau cùng
+            setTimeout(() => {
+                const btn = document.getElementById('hireBtn');
+                if (btn) {
+                    btn.style.opacity = '1';
+                    btn.style.animation = 'pulse-btn 2s infinite';
+                }
+            }, globalDelay * 1000 + 200); 
+        });
+
+        // --- BẪY 3 GIÂY (3-SECOND TRAP) ---
+        const lockScreen = document.getElementById('lock-screen');
+        const alertBox = document.getElementById('security-alert');
+        const countdownSpan = document.getElementById('countdown');
+        let trapTriggered = false;
+        let isUnlocked = false;
+
+        window.addEventListener('scroll', () => {
+            if (!isUnlocked && !trapTriggered && window.scrollY > 50) { 
+                triggerTrap();
+            }
+        });
+
+        function triggerTrap() {
+            trapTriggered = true;
+            alertBox.style.display = 'block'; // Hiện cảnh báo
+            
+            // Đếm ngược 3 giây
+            let timeLeft = 3;
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownSpan.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    lockContent(); // KHÓA MÀN HÌNH SAU 3S
+                }
+            }, 1000);
+        }
+
+        function lockContent() {
+            alertBox.style.display = 'none'; // Tắt cảnh báo
+            lockScreen.classList.add('active'); // Bật màn hình khóa
+            document.querySelector('.main-content').classList.add('content-locked');
+            document.querySelector('.sidebar').classList.add('content-locked');
+            document.body.style.overflow = 'hidden'; // Khóa cuộn
+        }
+
+        function unlockAndDownload() {
+            isUnlocked = true;
+            lockScreen.classList.remove('active');
+            document.querySelector('.main-content').classList.remove('content-locked');
+            document.querySelector('.sidebar').classList.remove('content-locked');
+            document.body.style.overflow = 'auto';
+            
+            setTimeout(() => { window.print(); }, 500);
+        }
+    </script>
 
 </body>
 </html>
