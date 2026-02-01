@@ -51,11 +51,12 @@
             0% { 
                 opacity: 0;
                 transform: translateY(-20px); /* Rơi từ trên xuống */
-                color: var(--gold); /* Lóe sáng khi rơi */
+                color: var(--gold); /* Lóe sáng vàng khi rơi */
             }
             100% { 
                 opacity: 1;
                 transform: translateY(0);
+                /* Sau khi rơi xong sẽ về màu gốc của element */
             }
         }
 
@@ -88,7 +89,7 @@
             border: 3px solid var(--gold);
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             opacity: 0; /* Ẩn mặc định để tạo hiệu ứng xuất hiện */
-            /* Animation dự phòng trong CSS để đảm bảo hiện nếu JS chậm */
+            /* Animation dự phòng trong CSS */
             animation: fadeInAvatar 1s ease-out 0.5s forwards;
         }
         
@@ -110,12 +111,12 @@
 
         /* KHÓA NỘI DUNG */
         .content-locked {
-            filter: blur(10px) grayscale(100%); /* Làm mờ và xám xịt */
+            filter: blur(10px) grayscale(100%); 
             pointer-events: none;    
             user-select: none;
         }
 
-        /* --- COUNTDOWN WARNING (CẢNH BÁO 3s) --- */
+        /* --- COUNTDOWN WARNING --- */
         #security-alert {
             position: fixed;
             top: 20px; right: 20px;
@@ -149,7 +150,6 @@
         .lock-title { font-size: 35px; margin-bottom: 10px; letter-spacing: 5px; text-transform: uppercase; border-bottom: 3px solid #ff4d4d; padding-bottom: 10px; }
         .lock-msg { color: #fff; font-size: 18px; margin-bottom: 40px; font-family: monospace; }
         .arrow-guide { color: var(--gold); font-size: 50px; animation: bounce 1s infinite; position: absolute; bottom: 90px; right: 50px; }
-        
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
@@ -183,7 +183,7 @@
             border: 2px solid #fff; font-family: "Courier New", Courier, monospace;
             cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            opacity: 0; /* JS sẽ hiện */
+            opacity: 0; 
             animation: pulse-btn 2s infinite;
         }
         .hire-btn:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); background-color: #fff; }
@@ -207,7 +207,7 @@
             .sidebar { border-right: 1px solid #555; }
             @page { margin: 0; size: auto; }
             .char-drop { opacity: 1 !important; animation: none !important; }
-            .profile-img-container { opacity: 1 !important; } /* Đảm bảo in ra có ảnh */ 
+            .profile-img-container { opacity: 1 !important; } 
         }
     </style>
 </head>
@@ -241,7 +241,7 @@
             <span class="img-tag">&lt;img&gt;</span>
             <div class="avatar-scope">
                 <div class="profile-img-container" id="avatar-container">
-                    <!-- QUAN TRỌNG: Đảm bảo file ảnh tên là avatar.jpg -->
+                    <!-- Ảnh đại diện -->
                     <img src="avatar.jpg" alt="Profile" class="profile-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/000000/FFFFFF/?text=Avatar+Missing';">
                 </div>
             </div>
@@ -457,7 +457,14 @@
                         }
                         node.replaceWith(spanWrapper);
                     } else if (node.nodeType === 1) { 
-                        processTextNodes(node);
+                        // FIX: Kiểm tra nếu là thẻ Icon (I) hoặc có class icon thì thêm hiệu ứng rơi
+                        if (node.tagName === 'I' || node.classList.contains('verified-icon')) {
+                            node.classList.add('char-drop');
+                            node.style.animationDelay = `${globalDelay}s`;
+                            globalDelay += delayIncrement;
+                        } else {
+                            processTextNodes(node);
+                        }
                     }
                 });
             }
