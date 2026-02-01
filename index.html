@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>God-Tier Developer Resume</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #1e1e1e;
+            --bg-sidebar: #252526;
+            --text-main: #d4d4d4;
+            --keyword: #569cd6;       
+            --type: #4ec9b0;          
+            --string: #ce9178;        
+            --number: #b5cea8;        
+            --comment: #6a9955;       
+            --method: #dcdcaa;        
+            --variable: #9cdcfe;      
+            --gold: #ffd700;          
+            --verified: #4dabf7;
+            --tag: #808080;           
+            --guide-line: #505050;    
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* Font chữ "Cổ" (Courier New) */
+            font-family: "Courier New", Courier, monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            font-size: 14px; 
+            line-height: 1.5;
+            overflow-x: hidden; 
+            font-weight: bold; 
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 300px; 
+            background-color: var(--bg-sidebar);
+            padding: 20px 5px 20px 20px;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-shrink: 0;
+            min-height: 100vh; 
+            height: auto;
+        }
+
+        /* --- AVATAR WRAPPER --- */
+        .img-tag {
+            color: var(--tag);
+            font-size: 13px;
+            display: block;
+        }
+
+        .avatar-scope {
+            border-left: 1px dashed var(--guide-line); 
+            margin-left: 5px;
+            padding-left: 20px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        .profile-img-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .profile-img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 10px; 
+            height: auto;
+            overflow: visible;
+            position: relative; 
+        }
+
+        /* --- CODE STYLING --- */
+        .code-block { margin-bottom: 25px; position: relative; }
+        
+        .scope {
+            border-left: 1px dashed var(--guide-line);
+            margin-left: 4px;  
+            padding-left: 25px; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kw { color: var(--keyword); }
+        .ty { color: var(--type); }
+        .str { color: var(--string); }
+        .num { color: var(--number); }
+        .cmt { color: var(--comment); font-style: italic; }
+        .mtd { color: var(--method); }
+        
+        .verified-icon { color: var(--verified); margin-left: 8px; }
+        .vip-text { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
+
+        a { color: var(--string); text-decoration: underline; cursor: pointer; }
+
+        /* --- NÚT HIRE THE LEGEND (CẬP NHẬT: TẠO PDF) --- */
+        .hire-btn {
+            position: fixed; 
+            bottom: 30px;
+            right: 40px;
+            background-color: var(--gold);
+            color: #000 !important; 
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none !important;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 9999; 
+            transition: transform 0.2s;
+            border: 2px solid #fff;
+            font-family: "Courier New", Courier, monospace;
+            cursor: pointer;
+        }
+        
+        .hire-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
+            background-color: #ffed4a;
+        }
+
+        /* Ẩn thanh cuộn */
+        ::-webkit-scrollbar { width: 8px; background-color: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background-color: #444; border-radius: 4px; }
+
+        @media (max-width: 850px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; min-height: auto; border-right: none; border-bottom: 1px solid #333;}
+            .main-content { padding: 20px; }
+            .hire-btn { bottom: 20px; right: 20px; padding: 10px 20px; font-size: 12px; }
+        }
+
+        /* --- CẤU HÌNH IN ẤN (TẠO PDF) --- */
+        @media print {
+            /* Ẩn nút download khi in ra giấy/PDF */
+            .hire-btn { display: none !important; }
+            
+            /* Giữ màu nền đen khi in (nếu trình duyệt hỗ trợ) */
+            body { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                background-color: #1e1e1e !important;
+                color: #d4d4d4 !important;
+            }
+            
+            /* Tùy chỉnh trang in */
+            @page { 
+                margin: 0; 
+                size: auto; 
+                background-color: #1e1e1e;
+            }
+            
+            .sidebar { border-right: 1px solid #555; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CỘT TRÁI (SIDEBAR) -->
+    <div class="sidebar">
+        <!-- AVATAR SECTION -->
+        <div class="code-block" style="margin-bottom: 10px;">
+            <span class="img-tag">&lt;img&gt;</span>
+            <div class="avatar-scope">
+                <div class="profile-img-container">
+                    <!-- Ảnh đại diện Venom -->
+                    <img src="avatar.jpg" alt="Profile" class="profile-img">
+                </div>
+            </div>
+            <span class="img-tag">&lt;\img&gt;</span>
+        </div>
+
+        <!-- DANH HIỆU -->
+        <div class="code-block">
+            <span class="kw">public enum</span> <span class="ty">GLOBAL_STATUS</span><br>
+            {
+            <div class="scope">
+                <div><span class="indent-0 vip-text">Tech_Hall_of_Fame,</span></div>
+                <div><span class="indent-0 vip-text">Unicorn_Founder_Club,</span></div>
+                <div><span class="indent-0 vip-text">Top_1_Percent_IQ,</span></div>
+                <div><span class="indent-0 ty">Knighted_by_Queen (Sir)</span></div>
+            </div>
+            }
+        </div>
+
+        <div class="code-block">
+            <span class="kw">public enum</span> <span class="ty">SPECIAL_ACCESS</span><br>
+            {
+            <div class="scope">
+                <div><span class="ty">Google_Data_Center_L5,</span></div>
+                <div><span class="ty">SpaceX_Launch_Control,</span></div>
+                <div><span class="ty">Pentagon_Cyber_Consultant</span></div>
+            </div>
+            }
+        </div>
+
+        <div class="code-block">
+            <span class="kw">public enum</span> <span class="ty">DOMAIN_MASTERY</span><br>
+            {
+            <div class="scope">
+                <div><span class="ty">Interplanetary_Internet,</span></div>
+                <div><span class="ty">Sentient_AI_Development,</span></div>
+                <div><span class="ty">Blockchain_Architecture,</span></div>
+                <div><span class="ty">Reverse_Engineering_UFO</span></div>
+            </div>
+            }
+        </div>
+
+        <div class="code-block">
+            <span class="kw">public enum</span> <span class="ty">LANGUAGES</span><br>
+            {
+            <div class="scope">
+                <div><span class="ty">Machine_Code (Mental),</span></div>
+                <div><span class="ty">C++ (Standards Author),</span></div>
+                <div><span class="ty">All_Known_Languages</span></div>
+            </div>
+            }
+        </div>
+
+        <div class="code-block">
+            <span class="kw">public enum</span> <span class="ty">SPOKEN</span><br>
+            {
+            <div class="scope">
+                <div><span class="ty">VIETNAMESE = Native,</span></div>
+                <div><span class="ty">ENGLISH = "C2 / Native",</span></div>
+                <div><span class="ty">CHINESE = "Native"</span></div>
+            </div>
+            }
+        </div>
+    </div>
+
+    <!-- CỘT PHẢI (NỘI DUNG CHÍNH) -->
+    <div class="main-content">
+        
+        <!-- Header Comment -->
+        <div class="code-block cmt">
+            /// &lt;summary&gt;<br>
+            /// ⚠️ WARNING: OVERQUALIFIED FOR 99.9% OF JOBS.<br>
+            /// The architect behind the systems that power modern civilization.<br>
+            /// "I don't just write code, I define the laws of the digital universe."<br>
+            /// &lt;/summary&gt;
+        </div>
+
+        <!-- PROFILE -->
+        <div class="code-block">
+            <span class="kw">public class</span> <span class="ty">LEGEND_PROFILE</span><br>
+            {
+            <div class="scope">
+                <div>
+                    <span class="kw">public string</span> NAME = <span class="str">"NGUYEN VAN CHUNG"</span>; 
+                    <i class="fas fa-check-circle verified-icon" title="Verified Legend"></i>
+                </div>
+                <div><span class="kw">public string</span> TITLE = <span class="str">"Global Chief Technology Officer (CTO)"</span>;</div>
+                <div><span class="kw">public string</span> EMAIL = <span class="str">"ngvchung1992@gmail.com"</span>;</div>
+                <div><span class="kw">public string</span> PHONE = <span class="str">"+84 968 206 586"</span>;</div>
+                <br>
+                <div><span class="kw">public string</span> WORTH = <span class="vip-text">"Priceless (Asset to Humanity)"</span>;</div>
+                <div><span class="kw">public string</span> AVAILABILITY = <span class="str">"By Special Invitation Only"</span>;</div>
+            </div>
+            }
+        </div>
+
+        <!-- ENDORSEMENTS -->
+        <div class="code-block">
+            <span class="kw">public static class</span> <span class="ty">INDUSTRY_ENDORSEMENTS</span><br>
+            {
+            <div class="scope">
+                
+                <div>
+                    <span class="kw">public string</span> Elon_Musk = <br>
+                    <span class="str" style="padding-left: 20px;">"The only person on Earth I'd trust to run Twitter's backend blindfolded."</span>;
+                </div>
+                <br>
+                <div>
+                    <span class="kw">public string</span> Bill_Gates = <br>
+                    <span class="str" style="padding-left: 20px;">"He writes code that the rest of us study like sacred scripture."</span>;
+                </div>
+                <br>
+                <div>
+                    <span class="kw">public string</span> Jensen_Huang_NVIDIA = <br>
+                    <span class="str" style="padding-left: 20px;">"Without Chung's algorithms, our GPUs would still be in the stone age."</span>;
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="code-block">
+            <span class="kw">public partial class</span> <span class="ty">ACADEMIC_EXCELLENCE</span> : <span class="ty">IvyLeague_Legend</span><br>
+            {
+            <div class="scope">
+                <!-- Method 1 -->
+                <div>
+                    <span class="kw">private void</span> <span class="mtd">MIT_PhD_Acceleration</span>()<br>
+                    {
+                    <div class="scope">
+                        <div><span class="kw">var</span> _Degree = <span class="str">"Double PhD in Quantum Physics & AI"</span>;</div>
+                        <div><span class="kw">var</span> _Record = <span class="vip-text">"Completed 6-year program in 18 months"</span>;</div>
+                        <div><span class="kw">var</span> _Thesis = <span class="str">"Solving the P vs NP Problem (Classified)"</span>;</div>
+                    </div>
+                    }
+                </div>
+                <br>
+                <!-- Method 2 -->
+                <div>
+                    <span class="kw">private void</span> <span class="mtd">Stanford_University</span>()<br>
+                    {
+                    <div class="scope">
+                        <div><span class="kw">var</span> _Role = <span class="str">"Visiting Professor (While being a student)"</span>;</div>
+                        <div><span class="kw">var</span> _Honor = <span class="str">"Youngest ever lecturer in Computer Science history"</span>;</div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- CAREER HISTORY -->
+        <div class="code-block">
+            <span class="kw">public static class</span> <span class="ty">WORLD_CHANGING_WORK</span><br>
+            {
+            <div class="scope">
+                <!-- JOB 1 -->
+                <div>
+                    <span class="kw">public void</span> <span class="mtd">Google_Alphabet_Inc</span>()<br>
+                    {
+                    <div class="scope">
+                        <div><span class="kw">var</span> _Role = <span class="str">"Distinguished Fellow (Level 10)"</span>;</div>
+                        <div><span class="kw">var</span> _Impact = <span class="vip-text">"Saved the company $2.5 Billion annually"</span>;</div>
+                        <br>
+                        <div class="cmt">/* Redesigned the entire Google Search indexing algorithm.</div>
+                        <div class="cmt">   Directly advised Sundar Pichai on the future of AI (Bard/Gemini). */</div>
+                    </div>
+                    }
+                </div>
+                <br>
+                <!-- JOB 2 -->
+                <div>
+                    <span class="kw">public void</span> <span class="mtd">OpenAI_Founding_Team</span>()<br>
+                    {
+                    <div class="scope">
+                        <div><span class="kw">var</span> _Role = <span class="str">"Lead Architect of GPT-4"</span>;</div>
+                        <br>
+                        <div class="cmt">/* Wrote the core self-attention mechanisms that made ChatGPT possible.</div>
+                        <div class="cmt">   Solved the alignment problem ensuring AI safety for humanity. */</div>
+                    </div>
+                    }
+                </div>
+                <br>
+                <!-- JOB 3 -->
+                <div>
+                    <span class="kw">public void</span> <span class="mtd">Confidential_Government_Project</span>()<br>
+                    {
+                    <div class="scope">
+                        <div><span class="kw">var</span> _Clearance = <span class="str">"Top Secret / SCI"</span>;</div>
+                        <br>
+                        <div class="cmt">/* Prevented a global cybersecurity meltdown during the 2022 crisis.</div>
+                        <div class="cmt">   Single-handedly patched the Quantum-Decryption vulnerability. */</div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+    </div>
+
+    <!-- NÚT TẠO PDF (LUÔN BÁM GÓC DƯỚI) -->
+    <a href="#" class="hire-btn" onclick="window.print(); return false;">
+        <i class="fas fa-file-pdf"></i> TẢI CV DẠNG PDF
+    </a>
+
+</body>
+</html>
