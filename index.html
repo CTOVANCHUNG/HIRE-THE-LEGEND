@@ -8,25 +8,29 @@
     
     <style>
         :root {
-            --bg-dark: #1e1e1e;
+            --bg-dark: #1e1e1e;       /* Nền VS Code chuẩn */
             --bg-sidebar: #252526;
-            --text-main: #d4d4d4;
-            --keyword: #569cd6;       
-            --type: #4ec9b0;          
-            --string: #ce9178;        
-            --number: #b5cea8;        
-            --comment: #6a9955;       
-            --method: #dcdcaa;        
-            --variable: #9cdcfe;      
+            --text-main: #d4d4d4;     /* Màu chữ chính */
+            
+            /* Bảng màu VS Code Cổ điển */
+            --keyword: #569cd6;       /* public, class... (Xanh dương) */
+            --type: #4ec9b0;          /* Tên Class (Xanh ngọc) */
+            --string: #ce9178;        /* Chuỗi (Cam đất) */
+            --number: #b5cea8;        /* Số (Xanh nhạt) */
+            --comment: #6a9955;       /* Comment (Xanh lá) */
+            --method: #dcdcaa;        /* Hàm (Vàng nhạt) */
+            --variable: #9cdcfe;      /* Biến (Xanh trời) */
+            
             --gold: #ffd700;          
             --verified: #4dabf7;
             --tag: #808080;           
-            --guide-line: #404040;    
+            --guide-line: #404040;    /* Đường kẻ xám nhẹ */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
+            /* Font chữ Cổ điển */
             font-family: "Courier New", Courier, monospace;
             background-color: var(--bg-dark);
             color: var(--text-main);
@@ -38,18 +42,37 @@
             font-weight: bold; 
         }
 
-        /* --- HIỆU ỨNG MƯA KÝ TỰ (CHAR RAIN) --- */
-        .char-drop {
-            display: inline-block;
-            opacity: 0;
-            white-space: pre; 
-            animation: rainDrop 0.2s linear forwards; 
+        /* --- HIỆU ỨNG CHỮ RƠI TỪ TRÊN XUỐNG (FALL IN) --- */
+        @keyframes fallIn {
+            0% { 
+                opacity: 0; 
+                transform: translateY(-50px); /* Bắt đầu ở phía trên */
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0);     /* Rơi vào đúng vị trí */
+            }
         }
 
-        @keyframes rainDrop {
-            0% { opacity: 0; transform: translateY(-20px); color: var(--gold); }
-            100% { opacity: 1; transform: translateY(0); }
+        /* Áp dụng animation */
+        .code-block, .profile-img-container, .img-tag {
+            animation: fallIn 0.5s ease-out forwards;
+            opacity: 0; /* Ẩn mặc định trước khi rơi */
         }
+
+        /* Hiệu ứng xuất hiện lần lượt (Stagger) - Rơi từng dòng */
+        .sidebar .code-block:nth-child(1) { animation-delay: 0.1s; }
+        .sidebar .code-block:nth-child(2) { animation-delay: 0.2s; }
+        .sidebar .code-block:nth-child(3) { animation-delay: 0.3s; }
+        .sidebar .code-block:nth-child(4) { animation-delay: 0.4s; }
+        .sidebar .code-block:nth-child(5) { animation-delay: 0.5s; }
+        .sidebar .code-block:nth-child(6) { animation-delay: 0.6s; }
+
+        .main-content .code-block:nth-child(1) { animation-delay: 0.2s; }
+        .main-content .code-block:nth-child(2) { animation-delay: 0.4s; }
+        .main-content .code-block:nth-child(3) { animation-delay: 0.6s; }
+        .main-content .code-block:nth-child(4) { animation-delay: 0.8s; }
+        .main-content .code-block:nth-child(5) { animation-delay: 1.0s; }
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -63,9 +86,10 @@
             flex-shrink: 0;
             min-height: 100vh; 
             height: auto;
+            transition: filter 0.5s ease;
         }
 
-        /* --- AVATAR WRAPPER --- */
+        /* --- AVATAR --- */
         .img-tag { color: var(--tag); font-size: 13px; display: block; }
 
         .avatar-scope {
@@ -78,13 +102,9 @@
             width: 150px; height: 150px;
             border-radius: 10px; overflow: hidden;
             border: 3px solid var(--gold);
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            opacity: 0;
-            animation: fadeInAvatar 1s ease-out 0.5s forwards;
+            /* Hiệu ứng vàng hoàng kim + Rơi xuống */
+            animation: golden-pulse 2s infinite, fallIn 0.6s ease-out forwards;
         }
-        
-        @keyframes fadeInAvatar { to { opacity: 1; } }
-
         .profile-img { width: 100%; height: 100%; object-fit: cover; }
 
         /* --- MAIN CONTENT --- */
@@ -94,93 +114,46 @@
             height: auto;
             overflow: visible;
             position: relative; 
-            transition: filter 0.5s ease;
-            padding-bottom: 80px; /* Để tránh bị nút che mất nội dung cuối */
+            transition: opacity 0.5s ease, filter 0.5s ease;
         }
 
-        /* KHÓA NỘI DUNG */
+        /* CLASS KHÓA NỘI DUNG */
         .content-locked {
-            filter: blur(10px) grayscale(100%); 
+            opacity: 0.05 !important; 
+            filter: blur(8px);       
             pointer-events: none;    
             user-select: none;
         }
 
-        /* --- COUNTDOWN WARNING --- */
-        #security-alert {
-            position: fixed;
-            top: 20px; right: 20px;
-            background: rgba(255, 0, 0, 0.9);
-            color: white;
-            padding: 15px 25px;
-            border: 2px solid red;
-            border-radius: 5px;
-            font-family: "Courier New", monospace;
-            font-weight: bold;
-            z-index: 6000;
-            display: none;
-            box-shadow: 0 0 20px red;
-            animation: blinkRed 0.5s infinite;
-        }
-        @keyframes blinkRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        /* --- LOCK SCREEN --- */
+        /* --- LOCK SCREEN (Màn hình khóa) --- */
         #lock-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); z-index: 5000;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            color: #ff4d4d; text-align: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-        #lock-screen.active { opacity: 1; pointer-events: all; }
-        
-        .lock-icon { font-size: 80px; margin-bottom: 20px; color: #ff4d4d; animation: shake 0.5s infinite; }
-        .lock-title { font-size: 35px; margin-bottom: 10px; letter-spacing: 5px; text-transform: uppercase; border-bottom: 3px solid #ff4d4d; padding-bottom: 10px; }
-        .lock-msg { color: #fff; font-size: 18px; margin-bottom: 40px; font-family: monospace; }
-        .arrow-guide { color: var(--gold); font-size: 50px; animation: bounce 1s infinite; position: absolute; bottom: 90px; right: 50px; }
-        @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-
-        /* --- CONTACT MODAL (BẢNG LIÊN HỆ) --- */
-        #contact-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 10000;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-        #contact-modal.active { opacity: 1; pointer-events: all; }
-
-        .contact-box {
-            background: #1e1e1e;
-            border: 2px solid var(--gold);
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff4d4d;
             text-align: center;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            position: relative;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
         }
-        .contact-title { color: var(--gold); font-size: 24px; margin-bottom: 20px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .contact-item { margin-bottom: 20px; text-align: left; }
-        .contact-label { color: var(--keyword); font-size: 12px; margin-bottom: 5px; display: block; }
-        .contact-value { 
-            background: #111; color: var(--text-main); 
-            padding: 10px; border-radius: 5px; border: 1px solid #333;
-            font-size: 16px; display: flex; justify-content: space-between; align-items: center;
+
+        #lock-screen.active {
+            opacity: 1;
+            pointer-events: all;
         }
-        .copy-btn { color: var(--gold); cursor: pointer; font-size: 14px; }
-        .copy-btn:active { color: #fff; }
-        
-        .action-btn {
-            display: block; width: 100%; padding: 12px; margin-top: 15px;
-            background: var(--gold); color: #000; font-weight: bold; text-decoration: none;
-            border-radius: 5px; text-transform: uppercase; transition: transform 0.2s;
-        }
-        .action-btn:hover { transform: scale(1.02); background: #fff; }
-        .close-modal { position: absolute; top: 10px; right: 15px; color: #fff; cursor: pointer; font-size: 20px; }
+
+        .lock-icon { font-size: 60px; margin-bottom: 20px; color: #ff4d4d; }
+        .lock-title { font-size: 28px; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ff4d4d; padding-bottom: 10px; }
+        .lock-msg { color: #ccc; font-size: 16px; margin-bottom: 30px; font-family: monospace; }
+        .arrow-guide { color: var(--gold); font-size: 40px; animation: bounce 1s infinite; position: absolute; bottom: 80px; right: 60px; }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
         /* --- CODE STYLING --- */
         .code-block { margin-bottom: 25px; position: relative; }
@@ -190,120 +163,94 @@
             display: flex; flex-direction: column;
         }
 
+        /* MÀU SẮC VS CODE CHUẨN */
         .kw { color: var(--keyword); }
         .ty { color: var(--type); }
         .str { color: var(--string); }
         .num { color: var(--number); }
         .cmt { color: var(--comment); font-style: italic; }
         .mtd { color: var(--method); }
+        
         .verified-icon { color: var(--verified); margin-left: 8px; }
-        .vip-text { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+        .vip-text { 
+            color: var(--gold); 
+            font-weight: 900; 
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
         a { color: var(--string); text-decoration: underline; cursor: pointer; }
 
         /* --- NÚT HIRE THE LEGEND --- */
         .hire-btn {
-            position: fixed; bottom: 30px; right: 40px;
+            position: fixed; 
+            bottom: 30px; right: 40px;
             background: linear-gradient(45deg, #FFD700, #ffb900, #FFD700);
             background-size: 200% 200%;
-            color: #000 !important; padding: 15px 30px;
-            border-radius: 5px; text-decoration: none !important;
-            font-weight: 900; display: flex; align-items: center; gap: 10px;
-            z-index: 9999; transition: all 0.3s;
-            border: 2px solid #fff; font-family: "Courier New", Courier, monospace;
-            cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            color: #000 !important; 
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none !important;
+            font-weight: 900;
+            display: flex; align-items: center; gap: 10px;
+            z-index: 9999; 
+            transition: all 0.3s;
+            border: 2px solid #fff;
+            font-family: "Courier New", Courier, monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            opacity: 0; 
-            animation: pulse-btn 2s infinite;
+            /* animation: golden-pulse 2s infinite; */ /* Tắt pulse để đỡ rối mắt với hiệu ứng rơi */
+            animation: fallIn 1s ease-out forwards 1.5s, golden-pulse 2s infinite 1.5s; /* Rơi xuống sau cùng rồi mới nhấp nháy */
+            opacity: 0;
         }
-        .hire-btn:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); background-color: #fff; }
-        @keyframes pulse-btn { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
+        
+        .hire-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            background-color: #fff;
+        }
+
+        @keyframes golden-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); border-color: #ffd700; }
+            70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); border-color: #ffed4a; }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); border-color: #ffd700; }
+        }
 
         ::-webkit-scrollbar { width: 8px; background-color: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background-color: #444; border-radius: 4px; }
 
-        /* --- MOBILE OPTIMIZATION --- */
-        @media (max-width: 768px) {
-            body { 
-                flex-direction: column; 
-                font-size: 13px; /* Giảm cỡ chữ chút cho mobile */
-            }
-            .sidebar { 
-                width: 100%; 
-                min-height: auto; 
-                border-right: none; 
-                border-bottom: 1px solid #333;
-                padding: 20px;
-            }
+        @media (max-width: 850px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; min-height: auto; border-right: none; border-bottom: 1px solid #333;}
             .main-content { padding: 20px; }
-            
-            .hire-btn { 
-                bottom: 20px; 
-                right: 20px; 
-                padding: 10px 20px; 
-                font-size: 12px; 
-                width: auto;
-            }
-            
+            .hire-btn { bottom: 20px; right: 20px; padding: 10px 20px; font-size: 12px; }
             .arrow-guide { bottom: 60px; right: 30px; font-size: 30px; }
-            .lock-title { font-size: 24px; }
-            .lock-icon { font-size: 50px; }
-            
-            /* Tối ưu hiển thị code dài trên mobile để không bị tràn ngang */
-            .code-block { word-break: break-word; }
-            .str { white-space: pre-wrap; } /* Cho phép xuống dòng chuỗi dài */
+        }
+
+        @media print {
+            .hire-btn, #lock-screen { display: none !important; }
+            .main-content { opacity: 1 !important; filter: none !important; }
+            body { background-color: #1e1e1e !important; color: #d4d4d4 !important; }
+            .sidebar { border-right: 1px solid #555; }
+            @page { margin: 0; size: auto; }
         }
     </style>
 </head>
 <body>
 
-    <!-- CONTACT MODAL -->
-    <div id="contact-modal">
-        <div class="contact-box">
-            <span class="close-modal" onclick="closeContact()">&times;</span>
-            <div class="contact-title">🔓 DATA DECRYPTED</div>
-            
-            <div class="contact-item">
-                <span class="contact-label">PHONE NUMBER (HOTLINE)</span>
-                <div class="contact-value">
-                    <span id="phone-text">0968 206 586</span>
-                    <i class="fas fa-copy copy-btn" onclick="copyToClipboard('0968206586')"></i>
-                </div>
-            </div>
-
-            <div class="contact-item">
-                <span class="contact-label">EMAIL ADDRESS</span>
-                <div class="contact-value">
-                    <span id="email-text">ngvchung1992@gmail.com</span>
-                    <i class="fas fa-copy copy-btn" onclick="copyToClipboard('ngvchung1992@gmail.com')"></i>
-                </div>
-            </div>
-
-            <a href="tel:0968206586" class="action-btn">
-                <i class="fas fa-phone-alt"></i> CALL NOW
-            </a>
-            <a href="mailto:ngvchung1992@gmail.com" class="action-btn" style="background: transparent; color: var(--gold); border: 1px solid var(--gold);">
-                <i class="fas fa-envelope"></i> SEND EMAIL
-            </a>
-        </div>
-    </div>
-
-    <!-- CẢNH BÁO BREACH -->
-    <div id="security-alert">
-        ⚠️ SECURITY BREACH DETECTED!<br>
-        SYSTEM LOCKING IN <span id="countdown">3</span>...
-    </div>
-
-    <!-- MÀN HÌNH KHÓA -->
+    <!-- MÀN HÌNH KHÓA (SCROLL TRAP) -->
     <div id="lock-screen">
         <i class="fas fa-lock lock-icon"></i>
-        <div class="lock-title">SYSTEM LOCKED</div>
+        <div class="lock-title">⚠️ SYSTEM LOCKED ⚠️</div>
         <div class="lock-msg">
-            Unauthorized Access Detected.<br>
-            Recruit the Candidate to Decrypt Data.
+            Candidate Profile is Encrypted.<br>
+            Verification Required to Proceed.
         </div>
         <div style="font-size: 20px; font-weight: bold; color: var(--gold);">
-            TAP BELOW TO UNLOCK 👇
+            RECRUIT TO UNLOCK
         </div>
+        <!-- Mũi tên chỉ vào nút Hire -->
         <div class="arrow-guide">
             <i class="fas fa-arrow-down"></i>
         </div>
@@ -311,11 +258,13 @@
 
     <!-- CỘT TRÁI (SIDEBAR) -->
     <div class="sidebar" id="sidebar">
+        <!-- AVATAR SECTION -->
         <div class="code-block" style="margin-bottom: 10px;">
             <span class="img-tag">&lt;img&gt;</span>
             <div class="avatar-scope">
-                <div class="profile-img-container" id="avatar-container">
-                    <img src="avatar.jpg" alt="Profile" class="profile-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/000000/FFFFFF/?text=Avatar+Missing';">
+                <div class="profile-img-container">
+                    <!-- Ảnh đại diện -->
+                    <img src="avatar.jpg" alt="Profile" class="profile-img">
                 </div>
             </div>
             <span class="img-tag">&lt;\img&gt;</span>
@@ -380,9 +329,10 @@
         </div>
     </div>
 
-    <!-- CỘT PHẢI (MAIN CONTENT) -->
+    <!-- CỘT PHẢI (NỘI DUNG CHÍNH) -->
     <div class="main-content" id="main-content">
         
+        <!-- Header Comment -->
         <div class="code-block cmt">
             /// &lt;summary&gt;<br>
             /// ⚠️ WARNING: OVERQUALIFIED FOR 99.9% OF JOBS.<br>
@@ -415,6 +365,7 @@
             <span class="kw">public static class</span> <span class="ty">INDUSTRY_ENDORSEMENTS</span><br>
             {
             <div class="scope">
+                
                 <div>
                     <span class="kw">public string</span> Elon_Musk = <br>
                     <span class="str" style="padding-left: 20px;">"The only person on Earth I'd trust to run Twitter's backend blindfolded."</span>;
@@ -501,121 +452,43 @@
 
     </div>
 
-    <!-- BUTTON -->
-    <a href="javascript:void(0)" class="hire-btn" id="hireBtn" onclick="unlockAndContact()">
+    <!-- NÚT TẠO PDF (LUÔN BÁM GÓC DƯỚI) -->
+    <a href="#" class="hire-btn" onclick="unlockAndDownload()">
         <i class="fas fa-crown"></i> HIRE THE LEGEND
     </a>
 
+    <!-- SCRIPT XỬ LÝ SCROLL TRAP & UNLOCK -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // HIỆU ỨNG MƯA KÝ TỰ
-            const contentBlocks = document.querySelectorAll('.code-block, .img-tag, .avatar-scope');
-            let globalDelay = 0;
-            const delayIncrement = 0.005; 
-
-            function processTextNodes(element) {
-                const childNodes = Array.from(element.childNodes);
-                childNodes.forEach(node => {
-                    if (node.nodeType === 3) { 
-                        const text = node.textContent;
-                        if (!text.trim()) return;
-                        const spanWrapper = document.createElement('span');
-                        for (let char of text) {
-                            const charSpan = document.createElement('span');
-                            charSpan.textContent = char;
-                            charSpan.classList.add('char-drop');
-                            charSpan.style.animationDelay = `${globalDelay}s`;
-                            spanWrapper.appendChild(charSpan);
-                            globalDelay += delayIncrement;
-                        }
-                        node.replaceWith(spanWrapper);
-                    } else if (node.nodeType === 1) { 
-                        if (node.tagName === 'I' || node.classList.contains('verified-icon')) {
-                            node.classList.add('char-drop');
-                            node.style.animationDelay = `${globalDelay}s`;
-                            globalDelay += delayIncrement;
-                        } else {
-                            processTextNodes(node);
-                        }
-                    }
-                });
-            }
-
-            const allContainers = document.querySelectorAll('.sidebar, .main-content');
-            allContainers.forEach(container => processTextNodes(container));
-
-            setTimeout(() => {
-                const ava = document.getElementById('avatar-container');
-                if (ava) {
-                    ava.style.opacity = '1';
-                    ava.style.animation = 'fadeInAvatar 0.5s forwards';
-                }
-            }, 800); 
-
-            setTimeout(() => {
-                const btn = document.getElementById('hireBtn');
-                if (btn) {
-                    btn.style.opacity = '1';
-                    btn.style.animation = 'pulse-btn 2s infinite';
-                }
-            }, globalDelay * 1000 + 200); 
-        });
-
-        // --- SCROLL TRAP LOGIC ---
         const lockScreen = document.getElementById('lock-screen');
-        const alertBox = document.getElementById('security-alert');
-        const countdownSpan = document.getElementById('countdown');
-        let trapTriggered = false;
+        const mainContent = document.getElementById('main-content');
+        const sidebar = document.getElementById('sidebar');
         let isUnlocked = false;
 
+        // Bắt sự kiện cuộn chuột
         window.addEventListener('scroll', () => {
-            if (!isUnlocked && !trapTriggered && window.scrollY > 50) { 
-                triggerTrap();
+            if (!isUnlocked && window.scrollY > 50) { // Nếu cuộn xuống quá 50px
+                lockContent();
             }
         });
 
-        function triggerTrap() {
-            trapTriggered = true;
-            alertBox.style.display = 'block';
-            
-            let timeLeft = 3;
-            const timer = setInterval(() => {
-                timeLeft--;
-                countdownSpan.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    lockContent();
-                }
-            }, 1000);
-        }
-
         function lockContent() {
-            alertBox.style.display = 'none';
             lockScreen.classList.add('active');
-            document.querySelector('.main-content').classList.add('content-locked');
-            document.querySelector('.sidebar').classList.add('content-locked');
+            mainContent.classList.add('content-locked');
+            sidebar.classList.add('content-locked');
             document.body.style.overflow = 'hidden';
         }
 
-        function unlockAndContact() {
+        function unlockAndDownload() {
             isUnlocked = true;
             lockScreen.classList.remove('active');
-            document.querySelector('.main-content').classList.remove('content-locked');
-            document.querySelector('.sidebar').classList.remove('content-locked');
+            mainContent.classList.remove('content-locked');
+            sidebar.classList.remove('content-locked');
             document.body.style.overflow = 'auto';
-            
-            // Hiện bảng liên hệ
-            document.getElementById('contact-modal').classList.add('active');
-        }
 
-        function closeContact() {
-            document.getElementById('contact-modal').classList.remove('active');
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Đã copy: ' + text);
-            });
+            // Đợi một chút cho hiệu ứng mở khóa xong rồi mới mở Print
+            setTimeout(() => {
+                window.print();
+            }, 500);
         }
     </script>
 
