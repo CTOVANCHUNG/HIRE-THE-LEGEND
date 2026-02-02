@@ -46,21 +46,21 @@
         @keyframes fallIn {
             0% { 
                 opacity: 0; 
-                transform: translateY(-50px); /* Bắt đầu ở phía trên */
+                transform: translateY(-50px);
             }
             100% { 
                 opacity: 1; 
-                transform: translateY(0);     /* Rơi vào đúng vị trí */
+                transform: translateY(0);
             }
         }
 
         /* Áp dụng animation */
         .code-block, .profile-img-container, .img-tag {
             animation: fallIn 0.5s ease-out forwards;
-            opacity: 0; /* Ẩn mặc định trước khi rơi */
+            opacity: 0; 
         }
 
-        /* Hiệu ứng xuất hiện lần lượt (Stagger) - Rơi từng dòng */
+        /* Hiệu ứng xuất hiện lần lượt */
         .sidebar .code-block:nth-child(1) { animation-delay: 0.1s; }
         .sidebar .code-block:nth-child(2) { animation-delay: 0.2s; }
         .sidebar .code-block:nth-child(3) { animation-delay: 0.3s; }
@@ -89,7 +89,7 @@
             transition: filter 0.5s ease;
         }
 
-        /* --- AVATAR --- */
+        /* --- AVATAR WRAPPER --- */
         .img-tag { color: var(--tag); font-size: 13px; display: block; }
 
         .avatar-scope {
@@ -119,17 +119,34 @@
 
         /* CLASS KHÓA NỘI DUNG */
         .content-locked {
-            opacity: 0.05 !important; 
-            filter: blur(8px);       
+            filter: blur(15px) grayscale(100%); 
             pointer-events: none;    
             user-select: none;
         }
+
+        /* --- COUNTDOWN WARNING (BẪY 3s) --- */
+        #security-alert {
+            position: fixed;
+            top: 20px; right: 20px;
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border: 2px solid red;
+            border-radius: 5px;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            z-index: 6000;
+            display: none;
+            box-shadow: 0 0 20px red;
+            animation: blinkRed 0.5s infinite;
+        }
+        @keyframes blinkRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* --- LOCK SCREEN (Màn hình khóa) --- */
         #lock-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.92);
             z-index: 5000;
             display: flex;
             flex-direction: column;
@@ -148,12 +165,142 @@
             pointer-events: all;
         }
 
-        .lock-icon { font-size: 60px; margin-bottom: 20px; color: #ff4d4d; }
+        .lock-icon { font-size: 60px; margin-bottom: 20px; color: #ff4d4d; animation: shake 0.5s infinite; }
         .lock-title { font-size: 28px; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ff4d4d; padding-bottom: 10px; }
         .lock-msg { color: #ccc; font-size: 16px; margin-bottom: 30px; font-family: monospace; }
         .arrow-guide { color: var(--gold); font-size: 40px; animation: bounce 1s infinite; position: absolute; bottom: 80px; right: 60px; }
 
+        @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+        /* --- CONTACT MODAL (BẢNG LIÊN HỆ) --- */
+        #contact-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #contact-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .contact-box {
+            background: #1e1e1e;
+            border: 2px solid var(--gold);
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #contact-modal.active .contact-box {
+            transform: scale(1);
+        }
+
+        .contact-title {
+            color: var(--gold);
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .contact-item {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .contact-label {
+            color: var(--keyword);
+            font-size: 11px;
+            margin-bottom: 5px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .contact-value {
+            background: #111;
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            color: var(--gold);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+        }
+        .copy-btn:hover { color: #fff; }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--gold);
+            color: #000;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #888;
+            cursor: pointer;
+            font-size: 24px;
+            transition: color 0.2s;
+        }
+        .close-modal:hover { color: #fff; }
 
         /* --- CODE STYLING --- */
         .code-block { margin-bottom: 25px; position: relative; }
@@ -163,7 +310,6 @@
             display: flex; flex-direction: column;
         }
 
-        /* MÀU SẮC VS CODE CHUẨN */
         .kw { color: var(--keyword); }
         .ty { color: var(--type); }
         .str { color: var(--string); }
@@ -226,10 +372,11 @@
             .main-content { padding: 20px; }
             .hire-btn { bottom: 20px; right: 20px; padding: 10px 20px; font-size: 12px; }
             .arrow-guide { bottom: 60px; right: 30px; font-size: 30px; }
+            .contact-box { width: 90%; } /* Modal full width trên mobile */
         }
 
         @media print {
-            .hire-btn, #lock-screen { display: none !important; }
+            .hire-btn, #lock-screen, #contact-modal, #security-alert { display: none !important; }
             .main-content { opacity: 1 !important; filter: none !important; }
             body { background-color: #1e1e1e !important; color: #d4d4d4 !important; }
             .sidebar { border-right: 1px solid #555; }
@@ -239,18 +386,56 @@
 </head>
 <body>
 
+    <!-- CONTACT MODAL (BẢNG LIÊN HỆ) -->
+    <div id="contact-modal">
+        <div class="contact-box">
+            <span class="close-modal" onclick="closeContact()">&times;</span>
+            <div class="contact-title">🔓 ACCESS GRANTED</div>
+            
+            <div class="contact-item">
+                <span class="contact-label">DIRECT PHONE / ZALO</span>
+                <div class="contact-value">
+                    <span id="phone-text">0968 206 586</span>
+                    <i class="fas fa-copy copy-btn" onclick="copyToClipboard('0968206586')" title="Copy Phone"></i>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <span class="contact-label">SECURE EMAIL</span>
+                <div class="contact-value">
+                    <span id="email-text">ngvchung1992@gmail.com</span>
+                    <i class="fas fa-copy copy-btn" onclick="copyToClipboard('ngvchung1992@gmail.com')" title="Copy Email"></i>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="tel:0968206586" class="action-btn">
+                    <i class="fas fa-phone-alt"></i> Call Now
+                </a>
+                <a href="mailto:ngvchung1992@gmail.com" class="action-btn secondary">
+                    <i class="fas fa-envelope"></i> Send Email
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CẢNH BÁO BREACH -->
+    <div id="security-alert">
+        ⚠️ SECURITY BREACH DETECTED!<br>
+        SYSTEM LOCKING IN <span id="countdown">3</span>...
+    </div>
+
     <!-- MÀN HÌNH KHÓA (SCROLL TRAP) -->
     <div id="lock-screen">
         <i class="fas fa-lock lock-icon"></i>
-        <div class="lock-title">⚠️ SYSTEM LOCKED ⚠️</div>
+        <div class="lock-title">SYSTEM LOCKED</div>
         <div class="lock-msg">
-            Candidate Profile is Encrypted.<br>
-            Verification Required to Proceed.
+            Unauthorized Access Detected.<br>
+            Recruit the Candidate to Decrypt Data.
         </div>
         <div style="font-size: 20px; font-weight: bold; color: var(--gold);">
-            RECRUIT TO UNLOCK
+            TAP BELOW TO UNLOCK 👇
         </div>
-        <!-- Mũi tên chỉ vào nút Hire -->
         <div class="arrow-guide">
             <i class="fas fa-arrow-down"></i>
         </div>
@@ -298,10 +483,10 @@
             <span class="kw">public enum</span> <span class="ty">DOMAIN_MASTERY</span><br>
             {
             <div class="scope">
-                <div><span class="ty">Interplanetary_Web,</span></div>
-                <div><span class="ty">Sentient_AI_Core,</span></div>
-                <div><span class="ty">Blockchain_Architect,</span></div>
-                <div><span class="ty">Reverse_Engineering</span></div>
+                <div><span class="ty">Interplanetary_Internet,</span></div>
+                <div><span class="ty">Sentient_AI_Development,</span></div>
+                <div><span class="ty">Blockchain_Architecture,</span></div>
+                <div><span class="ty">Reverse_Engineering_UFO</span></div>
             </div>
             }
         </div>
@@ -429,7 +614,7 @@
                         <div><span class="kw">var</span> _Impact = <span class="vip-text">"Saved the company $2.5 Billion annually"</span>;</div>
                         <br>
                         <div class="cmt">/* Redesigned the entire Google Search indexing algorithm.</div>
-                        <div class="cmt">   Directly advised Sundar Pichai on the future of AI. */</div>
+                        <div class="cmt">   Directly advised Sundar Pichai on the future of AI (Bard/Gemini). */</div>
                     </div>
                     }
                 </div>
@@ -441,8 +626,21 @@
                     <div class="scope">
                         <div><span class="kw">var</span> _Role = <span class="str">"Lead Architect of GPT-4"</span>;</div>
                         <br>
-                        <div class="cmt">/* Wrote the core self-attention mechanisms.</div>
-                        <div class="cmt">   Solved the alignment problem ensuring AI safety. */</div>
+                        <div class="cmt">/* Wrote the core self-attention mechanisms that made ChatGPT possible.</div>
+                        <div class="cmt">   Solved the alignment problem ensuring AI safety for humanity. */</div>
+                    </div>
+                    }
+                </div>
+                <br>
+                <!-- JOB 3 -->
+                <div>
+                    <span class="kw">public void</span> <span class="mtd">Confidential_Government_Project</span>()<br>
+                    {
+                    <div class="scope">
+                        <div><span class="kw">var</span> _Clearance = <span class="str">"Top Secret / SCI"</span>;</div>
+                        <br>
+                        <div class="cmt">/* Prevented a global cybersecurity meltdown during the 2022 crisis.</div>
+                        <div class="cmt">   Single-handedly patched the Quantum-Decryption vulnerability. */</div>
                     </div>
                     }
                 </div>
@@ -452,43 +650,89 @@
 
     </div>
 
-    <!-- NÚT TẠO PDF (LUÔN BÁM GÓC DƯỚI) -->
-    <a href="#" class="hire-btn" onclick="unlockAndDownload()">
+    <!-- NÚT MỞ BẢNG LIÊN HỆ (LUÔN BÁM GÓC DƯỚI) -->
+    <a href="#" class="hire-btn" onclick="unlockAndContact()">
         <i class="fas fa-crown"></i> HIRE THE LEGEND
     </a>
 
-    <!-- SCRIPT XỬ LÝ SCROLL TRAP & UNLOCK -->
+    <!-- SCRIPT XỬ LÝ SCROLL TRAP & CONTACT -->
     <script>
         const lockScreen = document.getElementById('lock-screen');
+        const alertBox = document.getElementById('security-alert');
+        const countdownSpan = document.getElementById('countdown');
         const mainContent = document.getElementById('main-content');
         const sidebar = document.getElementById('sidebar');
+        const contactModal = document.getElementById('contact-modal');
+        let trapTriggered = false;
         let isUnlocked = false;
 
         // Bắt sự kiện cuộn chuột
         window.addEventListener('scroll', () => {
-            if (!isUnlocked && window.scrollY > 50) { // Nếu cuộn xuống quá 50px
-                lockContent();
+            if (!isUnlocked && !trapTriggered && window.scrollY > 50) { // Nếu cuộn xuống quá 50px
+                triggerTrap();
             }
         });
 
-        function lockContent() {
-            lockScreen.classList.add('active');
-            mainContent.classList.add('content-locked');
-            sidebar.classList.add('content-locked');
-            document.body.style.overflow = 'hidden';
+        function triggerTrap() {
+            trapTriggered = true;
+            alertBox.style.display = 'block'; // Hiện cảnh báo
+            
+            // Đếm ngược 3 giây
+            let timeLeft = 3;
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownSpan.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    lockContent(); // KHÓA MÀN HÌNH SAU 3S
+                }
+            }, 1000);
         }
 
-        function unlockAndDownload() {
+        function lockContent() {
+            // Hiển thị màn hình khóa
+            alertBox.style.display = 'none'; // Tắt cảnh báo
+            lockScreen.classList.add('active');
+            
+            // Làm mờ nội dung
+            mainContent.classList.add('content-locked');
+            sidebar.classList.add('content-locked');
+            
+            // Khóa cuộn trang
+            document.body.style.overflow = 'hidden';
+            
+            // Đóng modal liên hệ nếu đang mở
+            closeContact();
+        }
+
+        function unlockAndContact() {
             isUnlocked = true;
+            
+            // Ẩn màn hình khóa
             lockScreen.classList.remove('active');
+            
+            // Hiện lại nội dung
             mainContent.classList.remove('content-locked');
             sidebar.classList.remove('content-locked');
+            
+            // Mở lại cuộn
             document.body.style.overflow = 'auto';
 
-            // Đợi một chút cho hiệu ứng mở khóa xong rồi mới mở Print
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            // Mở bảng liên hệ
+            contactModal.classList.add('active');
+        }
+
+        function closeContact() {
+            contactModal.classList.remove('active');
+        }
+
+        // Hàm copy
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
         }
     </script>
 
